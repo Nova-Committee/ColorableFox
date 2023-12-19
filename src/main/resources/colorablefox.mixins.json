@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "committee.nova.colorablefox.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "colorablefox.refmap.json",
+  "mixins": [
+    "MixinAnimal"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
