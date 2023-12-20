@@ -26,18 +26,18 @@ public abstract class MixinAnimal extends AgeableMob {
     @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
     private void inject$mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         if (!((Animal) (Object) this instanceof Fox fox)) return;
-        if (level().isClientSide()) return;
+        if (level.isClientSide()) return;
         final ItemStack stack = player.getItemInHand(hand);
-        final Fox.Type foxType = fox.getVariant();
+        final Fox.Type foxType = fox.getFoxType();
         if (stack.is(Items.WHITE_DYE) && foxType.equals(Fox.Type.RED)) {
-            fox.setVariant(Fox.Type.SNOW);
+            fox.setFoxType(Fox.Type.SNOW);
             stack.shrink(1);
-            level().playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
             cir.setReturnValue(InteractionResult.SUCCESS);
         } else if (foxType.equals(Fox.Type.SNOW) && (stack.is(Items.RED_DYE) || stack.is(Items.ORANGE_DYE))) {
-            fox.setVariant(Fox.Type.RED);
+            fox.setFoxType(Fox.Type.RED);
             stack.shrink(1);
-            level().playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+            level.playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }
