@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "colorablefox",
+  "version": "${version}",
+  "name": "colorablefox",
+  "description": "Make foxes dyeable!",
+  "authors": [
+    "Rinko1231",
+    "Tapio"
+  ],
+  "contact": {
+    "sources": "https://github.com/Nova-Committee/ColorableFox"
+  },
+  "license": "Nova-Relay-License-1.0",
+  "environment": "*",
+  "mixins": [
+    "colorablefox.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": "*"
+  }
+}
