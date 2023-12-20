@@ -1,44 +1,43 @@
 package committee.nova.colorablefox.mixin;
 
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Animal.class)
-public abstract class MixinAnimal extends AgeableMob {
-    protected MixinAnimal(EntityType<? extends AgeableMob> t, Level l) {
+@Mixin(AnimalEntity.class)
+public abstract class MixinAnimal extends AgeableEntity {
+    protected MixinAnimal(EntityType<? extends AgeableEntity> t, World l) {
         super(t, l);
     }
 
     @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
-    private void inject$mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!((Animal) (Object) this instanceof Fox fox)) return;
+    private void inject$mobInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResultType> cir) {
+        if (!((AnimalEntity) (Object) this instanceof FoxEntity)) return;
+        final FoxEntity fox = (FoxEntity) (Object) this;
         if (level.isClientSide()) return;
         final ItemStack stack = player.getItemInHand(hand);
-        final Fox.Type foxType = fox.getFoxType();
-        if (stack.is(Items.WHITE_DYE) && foxType.equals(Fox.Type.RED)) {
-            fox.setFoxType(Fox.Type.SNOW);
+        final FoxEntity.Type foxType = fox.getFoxType();
+        final Item item = stack.getItem();
+        if (item.equals(Items.WHITE_DYE) && foxType.equals(FoxEntity.Type.RED)) {
+            fox.setFoxType(FoxEntity.Type.SNOW);
             stack.shrink(1);
-            level.playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-            cir.setReturnValue(InteractionResult.SUCCESS);
-        } else if (foxType.equals(Fox.Type.SNOW) && (stack.is(Items.RED_DYE) || stack.is(Items.ORANGE_DYE))) {
-            fox.setFoxType(Fox.Type.RED);
+            cir.setReturnValue(ActionResultType.SUCCESS);
+        } else if (foxType.equals(FoxEntity.Type.SNOW) && (item.equals(Items.RED_DYE) || item.equals(Items.ORANGE_DYE))) {
+            fox.setFoxType(FoxEntity.Type.RED);
             stack.shrink(1);
-            level.playSound(null, this, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-            cir.setReturnValue(InteractionResult.SUCCESS);
+            cir.setReturnValue(ActionResultType.SUCCESS);
         }
     }
 }
